@@ -1,4 +1,8 @@
 {
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "name": "crx-vue3-core-code",
   "version": "1.0.0",
   "main": "index.js",
