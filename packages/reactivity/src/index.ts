@@ -1,2 +1,6 @@
-const Reactivity = {};
-export default { Reactivity };
+export {
+  reactive,
+  shallowReactive,
+  shallowReadonly,
+  readonly,
+} from "./reactive";
