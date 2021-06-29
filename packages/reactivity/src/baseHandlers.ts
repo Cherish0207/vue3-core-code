@@ -1,7 +1,8 @@
 import { isObject } from "@vue/shared/src";
-
+import { track } from "./effect";
+import { TrackOrTypes } from "./operators";
 import { reactive, readonly } from "./reactive";
-debugger;
+
 const createGetter =
   (isReadonly = false, shallow = false) =>
   (target, key, receiver) => {
@@ -9,6 +10,7 @@ const createGetter =
     if (!isReadonly) {
       // 收集依赖，数据变化后更新视图
       console.log("执行effect时会取值", "收集effect");
+      track(target, TrackOrTypes.GET, key);
     }
     if (shallow) return res;
     if (isObject(res)) {

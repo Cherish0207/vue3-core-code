@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2.effect-api测试</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
+    <script>
+      const { effect, reactive } = VueReactivity;
+      const state = reactive({ name: "cherish", age: 17, other: "xx" });
+      effect(() => {
+        app.innerHTML = `${state.name} is ${state.age}`;
+        effect(() => {
+          state.name++;
+        });
+      });
+      effect(() => {
+        app.innerHTML = `${state.name} is ${state.age}`;
+      });
+      state.name = 1;
+      // setTimeout(() => {
+      //   state.age = 18;
+      // }, 1000);
+      // setTimeout(() => {
+      //   state.other = "xxxx";
+      // }, 4000);
+    </script>
+  </body>
+</html>
