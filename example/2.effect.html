@@ -11,23 +11,21 @@
     <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
     <script>
       const { effect, reactive } = VueReactivity;
-      const state = reactive({ name: "cherish", age: 17, other: "xx" });
+      const state = reactive({ name: "cherish", age: 17, arr: [1, 2, 3] });
       effect(() => {
-        app.innerHTML = `${state.name} is ${state.age}`;
-        effect(() => {
-          state.name++;
-        });
+        // app.innerHTML = `${state.name} is ${state.age}`;
+        app.innerHTML = state.arr + state.arr[8]+state.arr.length
+        // effect(() => {
+        //   state.name++;
+        // });
+        // state.arr.push(2);
       });
-      effect(() => {
-        app.innerHTML = `${state.name} is ${state.age}`;
-      });
-      state.name = 1;
-      // setTimeout(() => {
-      //   state.age = 18;
-      // }, 1000);
-      // setTimeout(() => {
-      //   state.other = "xxxx";
-      // }, 4000);
+      setTimeout(() => {
+        // state.name = 's'
+        state.arr[100] = 100
+        // state.arr.push(1)
+       
+      }, 1000);
     </script>
   </body>
 </html>

@@ -1,6 +1,12 @@
-import { isObject } from "@vue/shared/src";
-import { track } from "./effect";
-import { TrackOrTypes } from "./operators";
+import {
+  hasChanged,
+  hasOwn,
+  isArray,
+  isIntegerKey,
+  isObject,
+} from "@vue/shared/src";
+import { track, trigger } from "./effect";
+import { TrackOrTypes, TriggerOrTypes } from "./operators";
 import { reactive, readonly } from "./reactive";
 
 const createGetter =
@@ -9,7 +15,6 @@ const createGetter =
     const res = Reflect.get(target, key, receiver);
     if (!isReadonly) {
       // 收集依赖，数据变化后更新视图
-      console.log("执行effect时会取值", "收集effect");
       track(target, TrackOrTypes.GET, key);
     }
     if (shallow) return res;
@@ -21,8 +26,18 @@ const createGetter =
 const createSetter =
   (shallow = false) =>
   (target, key, value, receiver) => {
-    const result = Reflect.set(target, key, value, receiver);
-    return result;
+      const oldValue = target[key]; // 获取老的值
+      let hadKey =
+        isArray(target) && isIntegerKey(key)
+          ? Number(key) < target.length
+          : hasOwn(target, key);
+      const result = Reflect.set(target, key, value, receiver);
+      if (!hadKey) {
+        trigger(target, TriggerOrTypes.ADD, key, value); // 新增
+      } else if (hasChanged(oldValue, value)) {
+        trigger(target, TriggerOrTypes.SET, key, value, oldValue); // 修改
+      }
+      return result;
   };
 
 const get = createGetter();

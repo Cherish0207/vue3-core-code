@@ -1,3 +1,5 @@
+import { isArray, isIntegerKey } from "@vue/shared/src";
+import { TriggerOrTypes } from "./operators";
 export function effect(fn, options: any = {}) {
   // effect-->响应的effect(数据变化重新执行)
   const effect = createReactiveEffect(fn, options);
@@ -32,7 +34,6 @@ function createReactiveEffect(fn, options) {
 // 让某个对象中的属性收集对应的effect函数
 const targetMap = new WeakMap();
 export function track(target, type, key) {
-  // console.log(target, key, activeEffect.id);
   if (activeEffect === undefined) return; // 此属性不用收集依赖，因为没在effect中使用
   let depsMap = targetMap.get(target);
   if (!depsMap) {
@@ -45,5 +46,40 @@ export function track(target, type, key) {
   if (!dep.has(activeEffect)) {
     dep.add(activeEffect);
   }
-  console.log(targetMap);
+}
+// 找属性对应的effect,让其执行 （数组、对象）
+export function trigger(target, type, key?, newValue?, oldValue?) {
+  console.log(target, type, key, newValue, oldValue);
+  const depsMap = targetMap.get(target);
+  if (!depsMap) return;
+
+  const effects = new Set(); // 对effect去重
+  const add = (effectsToAdd) => {
+    if (effectsToAdd) {
+      effectsToAdd.forEach((effect) => effects.add(effect));
+    }
+  };
+  if (key === "length" && isArray(target)) {
+    console.log(depsMap);
+    debugger;
+
+    depsMap.forEach((dep, key) => {
+      console.log(key);
+
+      if (key === "length" || key > newValue) {
+        add(dep);
+      }
+    });
+  } else {
+    if (key !== undefined) {
+      add(depsMap.get(key));
+    }
+    switch (type) {
+      case TriggerOrTypes.ADD:
+        if (isArray(target) && isIntegerKey(key)) {
+          add(depsMap.get("length"));
+        }
+    }
+  }
+  effects.forEach((effect: any) => effect());
 }
