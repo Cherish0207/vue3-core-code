@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3.ref-api测试</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
+    <script>
+      const { effect, reactive, ref } = VueReactivity;
+      const name = ref("cherish");
+      effect(() => {
+        console.log("render");
+        app.innerHTML = name.value;
+      });
+      setTimeout(() => {
+        name.value = "silence";
+      }, 1000);
+    </script>
+  </body>
+</html>
