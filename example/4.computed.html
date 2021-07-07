@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
+    <div id="app"></div>
+    <script>
+      let { effect, reactive, ref, shallowRef, toRef, toRefs, computed } =
+        VueReactivity;
+
+      const age = ref(18);
+      const myAge = computed(() => {
+        // 此方法默认不会执行
+        // 访问myAge时才执行,多次访问,只要值没变,就取缓存的数据
+        return age.value + 10;
+      });
+      // const myAge = computed({
+      //     get(){},
+      //     set(){}
+      // })
+
+      console.log(myAge.value);
+      console.log(myAge.value); // 缓存
+
+      age.value = 100; // 更新age，myAge不会立刻重新计算
+      myAge.value; // 再次计算最新值
+
+      effect(() => {
+        console.log(myAge.value); // 此effect中没有age
+      });
+      age.value = 500;
+    </script>
+  </body>
+</html>

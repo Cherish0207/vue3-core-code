@@ -18,7 +18,7 @@ function createReactiveEffect(fn, options) {
     try {
       activeEffect = effect;
       effectStack.push(effect); // 这里放的是effect函数的引用地址
-      fn(); // fn执行时会取值-->执行get方法
+      return fn(); // fn执行时会取值-->执行get方法
     } finally {
       effectStack.pop();
       activeEffect = effectStack[effectStack.length - 1];
@@ -49,7 +49,7 @@ export function track(target, type, key) {
 }
 // 找属性对应的effect,让其执行 （数组、对象）
 export function trigger(target, type, key?, newValue?, oldValue?) {
-  console.log(target, type, key, newValue, oldValue);
+  // console.log(target, type, key, newValue, oldValue);
   const depsMap = targetMap.get(target);
   if (!depsMap) return;
 
@@ -61,8 +61,6 @@ export function trigger(target, type, key?, newValue?, oldValue?) {
   };
   if (key === "length" && isArray(target)) {
     console.log(depsMap);
-    debugger;
-
     depsMap.forEach((dep, key) => {
       console.log(key);
 
@@ -81,5 +79,11 @@ export function trigger(target, type, key?, newValue?, oldValue?) {
         }
     }
   }
-  effects.forEach((effect: any) => effect());
+  effects.forEach((effect: any) => {
+    if (effect.options.scheduler) {
+      effect.options.scheduler(effect);
+    } else {
+      effect();
+    }
+  });
 }
