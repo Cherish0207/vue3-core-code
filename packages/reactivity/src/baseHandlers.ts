@@ -4,7 +4,7 @@ import {
   isArray,
   isIntegerKey,
   isObject,
-} from "@vue/shared/src";
+} from "@vue/shared";
 import { track, trigger } from "./effect";
 import { TrackOrTypes, TriggerOrTypes } from "./operators";
 import { reactive, readonly } from "./reactive";
@@ -26,18 +26,18 @@ const createGetter =
 const createSetter =
   (shallow = false) =>
   (target, key, value, receiver) => {
-      const oldValue = target[key]; // 获取老的值
-      let hadKey =
-        isArray(target) && isIntegerKey(key)
-          ? Number(key) < target.length
-          : hasOwn(target, key);
-      const result = Reflect.set(target, key, value, receiver);
-      if (!hadKey) {
-        trigger(target, TriggerOrTypes.ADD, key, value); // 新增
-      } else if (hasChanged(oldValue, value)) {
-        trigger(target, TriggerOrTypes.SET, key, value, oldValue); // 修改
-      }
-      return result;
+    const oldValue = target[key]; // 获取老的值
+    let hadKey =
+      isArray(target) && isIntegerKey(key)
+        ? Number(key) < target.length
+        : hasOwn(target, key);
+    const result = Reflect.set(target, key, value, receiver);
+    if (!hadKey) {
+      trigger(target, TriggerOrTypes.ADD, key, value); // 新增
+    } else if (hasChanged(oldValue, value)) {
+      trigger(target, TriggerOrTypes.SET, key, value, oldValue); // 修改
+    }
+    return result;
   };
 
 const get = createGetter();

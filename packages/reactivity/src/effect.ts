@@ -1,4 +1,4 @@
-import { isArray, isIntegerKey } from "@vue/shared/src";
+import { isArray, isIntegerKey } from "@vue/shared";
 import { TriggerOrTypes } from "./operators";
 export function effect(fn, options: any = {}) {
   // effect-->响应的effect(数据变化重新执行)

@@ -1,4 +1,4 @@
-import { hasChanged, isArray, isObject } from "@vue/shared/src";
+import { hasChanged, isArray, isObject } from "@vue/shared";
 import { track, trigger } from "./effect";
 import { TrackOrTypes, TriggerOrTypes } from "./operators";
 import { reactive } from "./reactive";

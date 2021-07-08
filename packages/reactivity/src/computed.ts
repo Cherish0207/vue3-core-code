@@ -1,4 +1,4 @@
-import { isFunction } from "@vue/shared/src";
+import { isFunction } from "@vue/shared";
 import { effect, track, trigger } from "./effect";
 import { TrackOrTypes, TriggerOrTypes } from "./operators";
 // 作业：调试 collectionHandlers ref 的api 和 computed
@@ -31,7 +31,6 @@ class ComputedRefImpl {
     this.setter(newValue);
   }
 }
-
 
 export function computed(getterOrOptions) {
   let getter;
